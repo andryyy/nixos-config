@@ -186,6 +186,14 @@ B7XnqjYYN05lAQi1/X1lChU5I+z8HebQAR2THGGPK9k=
     ];
   };
 
+  systemd.user.services.dconf-overrides = {
+    script = ''
+      /run/current-system/sw/bin/dconf load / </etc/nixos/misc/dconf_dump
+    '';
+    wantedBy = [ "graphical-session.target" ];
+    partOf = [ "graphical-session.target" ];
+  };
+
   nixpkgs.config.allowUnfree = true;
   
   nix = {
