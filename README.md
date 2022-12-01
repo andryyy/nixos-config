@@ -1,15 +1,15 @@
 ## NixOS Configuration
 
-Place corresponding SSH key for secrets to `/etc/ssh/ssh_host_ed25519_key`.
+Copy corresponding SSH key for secrets to `/etc/ssh/ssh_host_ed25519_key`.
 
-Run `~ sudo nixos-rebuild switch`.
+```
+~ sudo nixos-rebuild switch
+```
 
 ### Modify or add secrets
 
-Open `/etc/nixos/secrets/secrets.nix`:
-
 ```
-sudo nano /etc/nixos/secrets/secrets.nix
+~ sudo nano /etc/nixos/secrets/secrets.nix
 ```
 
 Add new secret in the format of `"new-secret.age".publicKeys = [ default ];` if it does not exist yet.
@@ -51,3 +51,4 @@ The decrypted secret file will be linked to the destination defined as path:
     group = "root";
   };
 ```
+
