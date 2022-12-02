@@ -99,10 +99,12 @@
     LC_TIME = "de_DE.utf8";
   };
 
+  services.udev.packages = with pkgs; [ gnome.gnome-settings-daemon ];
+
   services.xserver.enable = true;
   services.xserver.displayManager.gdm.enable = true;
   services.xserver.desktopManager.gnome.enable = true;
-
+  
   services.xserver = {
     layout = "de";
     xkbVariant = "";
@@ -235,6 +237,9 @@ B7XnqjYYN05lAQi1/X1lChU5I+z8HebQAR2THGGPK9k=
     iodine
     q
     starship
+    gnomeExtensions.dash-to-dock
+    gnomeExtensions.tray-icons-reloaded
+    gnomeExtensions.wifi-qrcode
   ];
 
   environment.shellAliases = {
@@ -282,8 +287,8 @@ B7XnqjYYN05lAQi1/X1lChU5I+z8HebQAR2THGGPK9k=
 
   services.gnome.gnome-browser-connector.enable = true;
 
-  networking.firewall.allowedTCPPorts = [ 3389 22 51820 ];
-  networking.firewall.allowedUDPPorts = [ 3389 22 51820 ];
+  networking.firewall.allowedTCPPorts = [ 22 ];
+  networking.firewall.allowedUDPPorts = [ 22 ];
 
   networking.wg-quick.interfaces = {
     wg0 = {
