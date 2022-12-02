@@ -87,7 +87,7 @@ sleep-inactive-battery-type='suspend'
 [org/gnome/shell]
 disable-user-extensions=false
 enabled-extensions=['dash-to-dock@micxgx.gmail.com', 'trayIconsReloaded@selfmade.pl', 'wifiqrcode@glerro.pm.me']
-favorite-apps=['org.gnome.Nautilus.desktop', 'firefox.desktop', 'telegramdesktop.desktop']
+favorite-apps=['org.gnome.Nautilus.desktop', 'thunderbird.desktop', 'firefox.desktop', 'telegramdesktop.desktop']
 
 [org/gnome/shell/app-switcher]
 current-workspace-only=false
