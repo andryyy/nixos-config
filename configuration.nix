@@ -293,7 +293,7 @@ B7XnqjYYN05lAQi1/X1lChU5I+z8HebQAR2THGGPK9k=
   networking.wg-quick.interfaces = {
     wg0 = {
       autostart = false;
-      address = [ "192.168.192.30/32" ];
+      address = [ "192.168.192.40/32" ];
       privateKeyFile = config.age.secrets.wireguard-privateKey.path;
       postUp = ''
         ${pkgs.ifmetric}/bin/ifmetric wg0 1000
