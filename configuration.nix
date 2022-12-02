@@ -99,10 +99,14 @@
     LC_TIME = "de_DE.utf8";
   };
 
+  services.udev.packages = with pkgs; [ gnome.gnome-settings-daemon ];
+  services.yubikey-agent.enable = true;
+  services.pcscd.enable = true;
+
   services.xserver.enable = true;
   services.xserver.displayManager.gdm.enable = true;
   services.xserver.desktopManager.gnome.enable = true;
-
+  
   services.xserver = {
     layout = "de";
     xkbVariant = "";
@@ -210,6 +214,9 @@ B7XnqjYYN05lAQi1/X1lChU5I+z8HebQAR2THGGPK9k=
     NIXPKGS_ALLOW_UNFREE = "1";
   };
 
+  services.mullvad-vpn.package = pkgs.mullvad-vpn;
+  services.mullvad-vpn.enable = true;
+
   environment.systemPackages = with pkgs; [
     (pkgs.callPackage "${builtins.fetchTarball "https://github.com/ryantm/agenix/archive/main.tar.gz"}/pkgs/agenix.nix" {})
     wget
@@ -235,6 +242,9 @@ B7XnqjYYN05lAQi1/X1lChU5I+z8HebQAR2THGGPK9k=
     iodine
     q
     starship
+    gnomeExtensions.dash-to-dock
+    gnomeExtensions.tray-icons-reloaded
+    gnomeExtensions.wifi-qrcode
   ];
 
   environment.shellAliases = {
@@ -282,8 +292,8 @@ B7XnqjYYN05lAQi1/X1lChU5I+z8HebQAR2THGGPK9k=
 
   services.gnome.gnome-browser-connector.enable = true;
 
-  networking.firewall.allowedTCPPorts = [ 3389 22 51820 ];
-  networking.firewall.allowedUDPPorts = [ 3389 22 51820 ];
+  networking.firewall.allowedTCPPorts = [ 22 ];
+  networking.firewall.allowedUDPPorts = [ 22 ];
 
   networking.wg-quick.interfaces = {
     wg0 = {
