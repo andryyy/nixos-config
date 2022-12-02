@@ -27,12 +27,20 @@
     "nodev"
   ];
 
-  age.secrets.github-SSH-key = {
+  age.secrets.user-github-SSH-key = {
     file = secrets/github-SSH-key.age;
     path = "/home/user/.ssh/github_key";
     mode = "600";
     owner = "user";
     group = "users";
+  };
+
+  age.secrets.root-github-SSH-key = {
+    file = secrets/github-SSH-key.age;
+    path = "/root/.ssh/github_key";
+    mode = "600";
+    owner = "root";
+    group = "root";
   };
 
   age.secrets.ssh-config-root = {
@@ -100,6 +108,8 @@
   };
 
   services.udev.packages = with pkgs; [ gnome.gnome-settings-daemon ];
+  services.yubikey-agent.enable = true;
+  services.pcscd.enable = true;
 
   services.xserver.enable = true;
   services.xserver.displayManager.gdm.enable = true;
@@ -211,6 +221,9 @@ B7XnqjYYN05lAQi1/X1lChU5I+z8HebQAR2THGGPK9k=
   environment.variables = {
     NIXPKGS_ALLOW_UNFREE = "1";
   };
+
+  services.mullvad-vpn.package = pkgs.mullvad-vpn;
+  services.mullvad-vpn.enable = true;
 
   environment.systemPackages = with pkgs; [
     (pkgs.callPackage "${builtins.fetchTarball "https://github.com/ryantm/agenix/archive/main.tar.gz"}/pkgs/agenix.nix" {})
