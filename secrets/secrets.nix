@@ -9,4 +9,5 @@ in
   "github-SSH-key.age".publicKeys = [ default ];
   "ssh-config-root.age".publicKeys = [ default ];
   "wireguard-privateKey.age".publicKeys = [ default ];
+  "smb-secrets.age".publicKeys = [ default ];
 }

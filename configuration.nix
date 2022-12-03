@@ -79,7 +79,25 @@
     options = [ "defaults,allow_other,_netdev,reconnect,delay_connect,ConnectTimeout=5,ServerAliveInterval=5" ];
   };
 
-  networking.hostName = "nixos"; # Define your hostname.
+  age.secrets.smb-secrets = {
+    file = secrets/smb-secrets.age;
+    path = "/etc/samba/smb-secrets";
+    mode = "600";
+    owner = "root";
+    group = "root";
+  };
+
+  fileSystems."/mnt/NAS" = {
+      device = "//nas.hai.internal/Daten";
+      fsType = "cifs";
+      options = let
+        # this line prevents hanging on network split
+        automount_opts = "x-systemd.automount,noauto,x-systemd.idle-timeout=60,x-systemd.device-timeout=5s,x-systemd.mount-timeout=5s";
+        other_opts = "uid=1000,gid=100,file_mode=0660,dir_mode=0770";
+      in ["${automount_opts},${other_opts},credentials=/etc/samba/smb-secrets"];
+  };
+
+  networking.hostName = "nixos-ux490ua"; # Define your hostname.
   networking.hosts = {
     "192.168.2.30" = [ "nas.hai.internal" "nas" ];
   };
@@ -228,6 +246,7 @@ B7XnqjYYN05lAQi1/X1lChU5I+z8HebQAR2THGGPK9k=
   environment.systemPackages = with pkgs; [
     (pkgs.callPackage "${builtins.fetchTarball "https://github.com/ryantm/agenix/archive/main.tar.gz"}/pkgs/agenix.nix" {})
     wget
+    cifs-utils
     gcc
     ifmetric
     cargo
@@ -258,6 +277,7 @@ B7XnqjYYN05lAQi1/X1lChU5I+z8HebQAR2THGGPK9k=
   environment.shellAliases = {
     l = "ls -l --color";
     ll = "ls -la --color";
+    yubissh = "export SSH_AUTH_SOCK=\"\${XDG_RUNTIME_DIR}/yubikey-agent/yubikey-agent.sock\"";
   };
 
   programs.mtr.enable = true;
