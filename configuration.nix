@@ -224,6 +224,14 @@ B7XnqjYYN05lAQi1/X1lChU5I+z8HebQAR2THGGPK9k=
     partOf = [ "graphical-session.target" ];
   };
 
+  systemd.user.services.firefox-prefs-overrides = {
+    script = ''
+      /etc/nixos/misc/scripts/firefox_set_user_prefs.py /etc/nixos/misc/user.js
+    '';
+    wantedBy = [ "graphical-session.target" ];
+    partOf = [ "graphical-session.target" ];
+  };
+
   nixpkgs.config.allowUnfree = true;
   
   nix = {
@@ -246,6 +254,8 @@ B7XnqjYYN05lAQi1/X1lChU5I+z8HebQAR2THGGPK9k=
   environment.systemPackages = with pkgs; [
     (pkgs.callPackage "${builtins.fetchTarball "https://github.com/ryantm/agenix/archive/main.tar.gz"}/pkgs/agenix.nix" {})
     wget
+    python311
+    python311.pkgs.configparser
     cifs-utils
     gcc
     ifmetric

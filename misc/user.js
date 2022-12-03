@@ -106,7 +106,7 @@ user_pref("network.prefetch-next", false);
 user_pref("pref.privacy.disable_button.cookie_exceptions", false);
 user_pref("privacy.clearOnShutdown.downloads", true);
 user_pref("privacy.clearOnShutdown.formdata", true);
-user_pref("privacy.clearOnShutdown.history", true);
+user_pref("privacy.clearOnShutdown.history", false);
 user_pref("privacy.clearOnShutdown.offlineApps", true);
 user_pref("privacy.clearOnShutdown.sessions", false);
 user_pref("privacy.cpd.offlineApps", true);
