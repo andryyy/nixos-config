@@ -8,6 +8,7 @@
   imports =
     [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
+      ./files/files.nix
       "${builtins.fetchTarball "https://github.com/ryantm/agenix/archive/main.tar.gz"}/modules/age.nix"
     ];
 
@@ -27,74 +28,30 @@
     "nodev"
   ];
 
-  age.secrets.user-github-SSH-key = {
-    file = secrets/github-SSH-key.age;
-    path = "/home/user/.ssh/github_key";
-    mode = "600";
-    owner = "user";
-    group = "users";
-  };
-
-  age.secrets.root-github-SSH-key = {
-    file = secrets/github-SSH-key.age;
-    path = "/root/.ssh/github_key";
-    mode = "600";
-    owner = "root";
-    group = "root";
-  };
-
-  age.secrets.ssh-config-root = {
-    file = secrets/ssh-config-root.age;
-    path = "/root/.ssh/config";
-    mode = "600";
-    owner = "root";
-    group = "root";
-  };
-
-  age.secrets.nl-SSH-key = {
-    file = secrets/nl-SSH-key.age;
-    path = "/root/.ssh/nl.key";
-    mode = "600";
-    owner = "root";
-    group = "root";
-  };
-  
-  age.secrets.DebianHomeserver-SSH-key = {
-    file = secrets/DebianHomeserver-SSH-key.age;
-    path = "/root/.ssh/DebianHomserver.key";
-    mode = "600";
-    owner = "root";
-    group = "root";
-  };
+  boot.extraModulePackages = with config.boot.kernelPackages; [
+    rtl88xxau-aircrack
+  ];
 
   fileSystems."/debian_homeserver/opt" = {
-    device = "/run/current-system/sw/bin/sshfs#root@DebianHomeserver:/opt/";
+    device = "${pkgs.sshfs}/bin/sshfs#root@DebianHomeserver:/opt/";
     fsType = "fuse";
     options = [ "defaults,allow_other,_netdev,reconnect,delay_connect,ConnectTimeout=5,ServerAliveInterval=5" ];
   };
 
   fileSystems."/nl/user" = {
-    device = "/run/current-system/sw/bin/sshfs#user@nl:/home/user";
+    device = "${pkgs.sshfs}/bin/sshfs#user@nl:/home/user";
     fsType = "fuse";
     options = [ "defaults,allow_other,_netdev,reconnect,delay_connect,ConnectTimeout=5,ServerAliveInterval=5" ];
   };
 
-  age.secrets.smb-secrets = {
-    file = secrets/smb-secrets.age;
-    path = "/etc/samba/smb-secrets";
-    mode = "600";
-    owner = "root";
-    group = "root";
-  };
-
   fileSystems."/mnt/NAS" = {
-      device = "//nas.hai.internal/Daten";
-      fsType = "cifs";
-      options = let
-        # this line prevents hanging on network split
-        automount_opts = "x-systemd.automount,noauto,x-systemd.idle-timeout=60,x-systemd.device-timeout=5s,x-systemd.mount-timeout=5s";
-        other_opts = "uid=1000,gid=100,file_mode=0660,dir_mode=0770";
-      in ["${automount_opts},${other_opts},credentials=/etc/samba/smb-secrets"];
+    device = "//nas.hai.internal/Daten";
+    fsType = "cifs";
+    options = let
+      # this line prevents hanging on network split
+      automount_opts = "x-systemd.automount,noauto,x-systemd.idle-timeout=60,x-systemd.device-timeout=5s,x-systemd.mount-timeout=5s";
+      other_opts = "uid=1000,gid=100,file_mode=0660,dir_mode=0770";
+    in ["${automount_opts},${other_opts},credentials=/etc/samba/smb-secrets"];
   };
 
   networking.hostName = "nixos-ux490ua"; # Define your hostname.
@@ -103,11 +60,6 @@
   };
 
   networking.networkmanager.enable = true;
-
-  age.secrets.NetworkManager-HAI = {
-    file = secrets/NetworkManager-HAI.age;
-    path = "/etc/NetworkManager/system-connections/hai-wifi.nmconnection";
-  };
 
   time.timeZone = "Europe/Berlin";
 
@@ -225,6 +177,7 @@ B7XnqjYYN05lAQi1/X1lChU5I+z8HebQAR2THGGPK9k=
   };
 
   systemd.user.services.firefox-prefs-overrides = {
+    path = with pkgs; [ nix ];
     script = ''
       /etc/nixos/misc/scripts/firefox_set_user_prefs.py /etc/nixos/misc/user.js
     '';
@@ -254,8 +207,9 @@ B7XnqjYYN05lAQi1/X1lChU5I+z8HebQAR2THGGPK9k=
   environment.systemPackages = with pkgs; [
     (pkgs.callPackage "${builtins.fetchTarball "https://github.com/ryantm/agenix/archive/main.tar.gz"}/pkgs/agenix.nix" {})
     wget
-    python311
-    python311.pkgs.configparser
+    bat
+    delta
+    ncdu
     cifs-utils
     gcc
     ifmetric
