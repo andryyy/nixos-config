@@ -51,7 +51,7 @@
   };
 
   age.secrets.NetworkManager-HAI = {
-    file = secrets/NetworkManager-HAI.age;
+    file = ../secrets/NetworkManager-HAI.age;
     path = "/etc/NetworkManager/system-connections/hai-wifi.nmconnection";
     mode = "600";
     owner = "root";
